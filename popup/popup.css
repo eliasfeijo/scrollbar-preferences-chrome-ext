@@ -33,7 +33,47 @@ h1 {
   width: 100%;
 }
 
-.preference-input input {
+.preference-input.contained {
+  display: block;
+  width: auto;
+  position: relative;
+}
+
+.preference-input.contained label {
+  position: absolute;
+  top: -5px;
+  left: 5px;
+  font-size: 10px;
+  background: white;
+  padding: 0 3px;
+  transition: top 0.2s ease-in-out;
+}
+
+.preference-input.contained input {
+  margin: 0;
+  padding: 0;
+  min-height: 40px;
+  border: 1px solid #333;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 300;
+  text-align: center;
+}
+
+.preference-input.contained label.disabled {
+  background-color: #eee;
+  top: 1px;
+  color: #999;
+}
+
+.preference-input input:disabled {
+  background-color: #eee;
+  color: #999;
+}
+
+.preference-input input[type="number"] {
   margin: 10px;
   padding: 0;
   width: 40px;
@@ -60,4 +100,49 @@ form {
 
 form > * {
   margin: 0 0 20px 0;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.action-buttons button {
+  margin: 0 10px;
+  padding: 0;
+  flex: 1;
+  min-height: 40px;
+  border: 1px solid #333;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 300;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#restore-defaults-button {
+  background-color: #333;
+  color: #fff;
+}
+
+#save-button {
+  background-color: #7f7;
+  color: #000;
+}
+
+.button-hint {
+  font-size: 12px;
+  font-weight: 300;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }

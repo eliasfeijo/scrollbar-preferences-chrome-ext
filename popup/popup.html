@@ -9,17 +9,30 @@
     <form>
       <div class="radio-group">
         <div class="preference-radio">
-          <input type="radio" name="scrollbar-use-radio" id="scrollbar-use-default" value="default" checked>
-          <label for="scrollbar-use-default">Use default scrollbar</label>
+          <input type="radio" name="selector-radio" id="use-root-selector" value="root" checked>
+          <label for="use-root-selector">Use document root selector</label>
         </div>
         <div class="preference-radio">
-          <input type="radio" name="scrollbar-use-radio" id="scrollbar-use-custom" value="custom">
-          <label for="scrollbar-use-custom">Use custom scrollbar</label>
+          <input type="radio" name="selector-radio" id="use-custom-selector" value="custom">
+          <label for="use-custom-selector">Use custom selector</label>
         </div>
+      </div>
+      <div class="preference-input contained">
+        <label for="custom-selector-input">Custom Selector</label>
+        <input type="text" name="custom-selector-input" id="custom-selector-input" value="body">
       </div>
       <div class="preference-input">
         <label for="scrollbar-width-input">Scrollbar Width (px):</label>
         <input type="number" name="scrollbar-width-input" id="scrollbar-width-input" min="0" value="">
+      </div>
+      <div class="action-buttons">
+        <button type="button" id="restore-defaults-button">
+          Restore Defaults
+          <span class="button-hint">
+            (may need refresh)
+          </span>
+        </button>
+        <button type="button" id="save-button">Save</button>
       </div>
     </form>
   </body>
