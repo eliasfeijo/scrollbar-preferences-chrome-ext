@@ -95,6 +95,8 @@ document.querySelector('#save-button').addEventListener('click', async () => {
     args: [true, preferences],
   });
   console.log('save-button clicked', width, selector, currentTab);
+  chrome.action.setBadgeText({ text: 'on', tabId: currentTab.id });
+  chrome.action.setBadgeBackgroundColor({ color: '#7f7', tabId: currentTab.id });
 });
 
 document.querySelector('#restore-defaults-button').addEventListener('click', async () => {
@@ -110,5 +112,6 @@ document.querySelector('#restore-defaults-button').addEventListener('click', asy
   console.log('restore-defaults-button clicked', preferences, currentTab);
   // The root selector doesn't have a class, so we need to reload the page to remove the style
   await chrome.storage.local.remove(currentTab.url);
+  chrome.action.setBadgeText({ text: '', tabId: currentTab.id });
   !preferences.isCustomSelector && await chrome.tabs.reload(currentTab.id);
 });

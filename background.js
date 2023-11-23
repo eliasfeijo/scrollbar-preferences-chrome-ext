@@ -3,5 +3,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === 'activate-badge') {
     chrome.action.setBadgeText({ text: 'on', tabId: sender.tab.id });
     chrome.action.setBadgeBackgroundColor({ color: '#7f7', tabId: sender.tab.id });
+  } else if (message === 'deactivate-badge') {
+    chrome.action.setBadgeText({ text: '', tabId: sender.tab.id });
   }
 });
