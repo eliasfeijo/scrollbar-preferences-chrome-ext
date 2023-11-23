@@ -1,13 +1,25 @@
-const DEFAULT_SCROLLBAR_WIDTH_PX = 5;
+const DEFAULT_SCROLLBAR_WIDTH_PX = 15;
 const SCROLLBAR_USE_RADIO = { CUSTOM: 'custom', DEFAULT: 'default' };
+
+function setScrollbarWidthVar(widthVar) {
+  document.body.style.setProperty('--scrollbar-width', widthVar);
+}
 
 async function getScrollbarWidth() {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tabs || !tabs.length) return;
   const currentTab = tabs[0];
   const storage = await chrome.storage.local.get(currentTab.url);
-  document.querySelector('#scrollbar-width-input').value = storage[currentTab.url];
-  return storage[currentTab.url];
+  const width = storage[currentTab.url];
+  const widthPx = width !== undefined ? `${width}px` : 'auto';
+  await chrome.scripting.executeScript({
+    target: { tabId: currentTab.id },
+    func: setScrollbarWidthVar,
+    args: [widthPx],
+  });
+  document.querySelector('#scrollbar-width-input').value = width ?? "";
+  console.log('getScrollbarWidth', width, currentTab)
+  return width;
 }
 
 getScrollbarWidth();
@@ -17,9 +29,15 @@ document.querySelector('#scrollbar-width-input').addEventListener('change', asyn
   if (!tabs || !tabs.length) return;
   const currentTab = tabs[0];
   const width = parseInt(event.target.value, 10);
-  console.log('scrollbar-width-input changed', width, currentTab);
   await chrome.storage.local.set({ [currentTab.url]: width });
+  await getScrollbarWidth();
+  console.log('scrollbar-width-input changed', width, currentTab);
 });
+
+function addOrRemoveScrollbarPreferencesClass(shouldAddClass) {
+  const func = shouldAddClass ? document.body.classList.add : document.body.classList.remove;
+  func.call(document.body.classList, '__scrollbar-preferences-ext');
+}
 
 async function onScrollbarUseChange(radioValue) {
   console.log('onScrollbarUseChange', radioValue);
@@ -27,22 +45,22 @@ async function onScrollbarUseChange(radioValue) {
   if (!tabs || !tabs.length) return;
   const currentTab = tabs[0];
   const width = await getScrollbarWidth();
-  if(radioValue === SCROLLBAR_USE_RADIO.CUSTOM) {
-    document.querySelector('#scrollbar-width-input').disabled = false;
-    if (width === undefined) {
-      document.querySelector('#scrollbar-width-input').value = DEFAULT_SCROLLBAR_WIDTH_PX;
-      await chrome.storage.local.set({ [currentTab.url]: DEFAULT_SCROLLBAR_WIDTH_PX });
-    }
-    // await chrome.tabs.executeScript({
-    //   code: `document.body.style.setProperty('--scrollbar-width', '${width}px');`
-    // });
-    return;
+  const input = document.querySelector('#scrollbar-width-input');
+  const isCustom = radioValue === SCROLLBAR_USE_RADIO.CUSTOM;
+  if (isCustom) {
+    input.disabled = false;
+    const widthOverride = width ?? (input.value || DEFAULT_SCROLLBAR_WIDTH_PX);
+    await chrome.storage.local.set({ [currentTab.url]: widthOverride });
+  } else {
+    input.disabled = true;
+    await chrome.storage.local.remove(currentTab.url);
   }
-  document.querySelector('#scrollbar-width-input').disabled = true;
-  await chrome.storage.local.remove(currentTab.url);
-  // await chrome.tabs.executeScript({
-  //   code: `document.body.style.setProperty('--scrollbar-width', '');`
-  // });
+  await chrome.scripting.executeScript({
+    target: { tabId: currentTab.id },
+    func: addOrRemoveScrollbarPreferencesClass,
+    args: [isCustom],
+  });
+  await getScrollbarWidth();
 }
 
 document.querySelectorAll('input[name="scrollbar-use-radio"]').forEach((radio) => {
@@ -65,4 +83,11 @@ document.querySelectorAll('input[name="scrollbar-use-radio"]').forEach((radio) =
   document.querySelector(`#scrollbar-use-${checked}`).checked = true;
   document.querySelector(`#scrollbar-use-${unchecked}`).checked = false;
   onScrollbarUseChange(checked);
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tabs || !tabs.length) return;
+  const currentTab = tabs[0];
+  await chrome.scripting.insertCSS({
+    css: `body.__scrollbar-preferences-ext::-webkit-scrollbar { width: var(--scrollbar-width); }`,
+    target: { tabId: currentTab.id },
+  });
 })();
