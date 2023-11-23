@@ -44,7 +44,7 @@ document.querySelector('#scrollbar-width-input').addEventListener('change', asyn
 
 function applyOrRestoreScrollbarPreferences(shouldApply, preferences) {
   const { isCustomSelector, selector, width, className } = preferences;
-  const fullSelector = isCustomSelector ? `${selector}.${className}` : ROOT_SELECTOR;
+  const fullSelector = isCustomSelector ? `${selector}.${className}` : selector;
   if (shouldApply) {
     isCustomSelector && document.querySelector(selector).classList.add(className);
     document.querySelector(fullSelector).style.setProperty('--scrollbar-width', `${width ?? 0}px`);
