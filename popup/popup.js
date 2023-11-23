@@ -101,12 +101,14 @@ document.querySelector('#restore-defaults-button').addEventListener('click', asy
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tabs || !tabs.length) return;
   const currentTab = tabs[0];
-  await chrome.storage.local.remove(currentTab.url);
   const preferences = await getScrollbarPreferences();
   await chrome.scripting.executeScript({
     target: { tabId: currentTab.id },
     func: applyOrRestoreScrollbarPreferences,
     args: [false, preferences],
   });
-  console.log('restore-defaults-button clicked', currentTab);
+  console.log('restore-defaults-button clicked', preferences, currentTab);
+  // The root selector doesn't have a class, so we need to reload the page to remove the style
+  await chrome.storage.local.remove(currentTab.url);
+  !preferences.isCustomSelector && await chrome.tabs.reload(currentTab.id);
 });
