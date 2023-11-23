@@ -6,9 +6,21 @@
   </head>
   <body>
     <h1>Scrollbar Preferences</h1>
-    <div class="preference-input">
-      <label for="scrollbar-width-input">Scrollbar Width (px):</label>
-      <input type="number" name="scrollbar-width-input" id="scrollbar-width-input" min="0" value="">
-    </div>
+    <form>
+      <div class="radio-group">
+        <div class="preference-radio">
+          <input type="radio" name="scrollbar-use-radio" id="scrollbar-use-default" value="default" checked>
+          <label for="scrollbar-use-default">Use default scrollbar</label>
+        </div>
+        <div class="preference-radio">
+          <input type="radio" name="scrollbar-use-radio" id="scrollbar-use-custom" value="custom">
+          <label for="scrollbar-use-custom">Use custom scrollbar</label>
+        </div>
+      </div>
+      <div class="preference-input">
+        <label for="scrollbar-width-input">Scrollbar Width (px):</label>
+        <input type="number" name="scrollbar-width-input" id="scrollbar-width-input" min="0" value="">
+      </div>
+    </form>
   </body>
 </html>
