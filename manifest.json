@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Scrollbar Preferences",
+    "description": "Customize the scrollbars of any web page.",
+    "version": "0.1",
+    "action": {
+      "default_title": "Scrollbar Preferences",
+      "default_popup": "popup/popup.html",
+      "default_icon": {
+        "16": "icons/16.png",
+        "32": "icons/32.png",
+        "48": "icons/48.png",
+        "128": "icons/128.png"
+      }
+    },
+    "icons": {
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    },
+    "permissions": [
+      "storage",
+      "activeTab",
+      "scripting"
+    ]
+  }
