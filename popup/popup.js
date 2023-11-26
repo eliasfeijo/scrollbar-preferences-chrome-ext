@@ -4,7 +4,7 @@ const DEFAULT_CLASS = '__scrollbar-preferences-ext';
 const DEFAULT_SCROLLBAR_WIDTH_PX = 15;
 const DEFAULT_PREFERENCES_OBJ = {
   width: DEFAULT_SCROLLBAR_WIDTH_PX,
-  isCustomSelector: true,
+  isCustomSelector: false,
   selector: DEFAULT_SELECTOR,
   className: DEFAULT_CLASS,
 };
@@ -44,7 +44,7 @@ document.querySelector('#scrollbar-width-input').addEventListener('change', asyn
 
 function applyOrRestoreScrollbarPreferences(shouldApply, preferences) {
   const { isCustomSelector, selector, width, className } = preferences;
-  const fullSelector = isCustomSelector ? `${selector}.${className}` : selector;
+  const fullSelector = isCustomSelector ? `${selector}.${className}` : ROOT_SELECTOR;
   if (shouldApply) {
     isCustomSelector && document.querySelector(selector).classList.add(className);
     document.querySelector(fullSelector).style.setProperty('--scrollbar-width', `${width ?? 0}px`);
@@ -61,7 +61,6 @@ async function onUseSelectorChange(radioValue) {
   const currentTab = tabs[0];
   const storage = await chrome.storage.local.get(currentTab.url);
   const obj = {...DEFAULT_PREFERENCES_OBJ, ...storage[currentTab.url]};
-  obj.selector = radioValue === USE_SELECTOR_RADIO.ROOT ? ROOT_SELECTOR : obj.selector ?? DEFAULT_SELECTOR;
   obj.isCustomSelector = radioValue === USE_SELECTOR_RADIO.CUSTOM;
   await chrome.storage.local.set({ [currentTab.url]: obj });
   await getScrollbarPreferences();

@@ -1,3 +1,5 @@
+const ROOT_SELECTOR = ':root';
+
 async function loadScrollbarPreferences() {
   const url = window.location.href;
   const storage = await chrome.storage.local.get(url);
@@ -11,7 +13,7 @@ async function loadScrollbarPreferences() {
     }
   `;
   document.head.appendChild(style);
-  const fullSelector = isCustomSelector ? `${selector}.${className}` : selector;
+  const fullSelector = isCustomSelector ? `${selector}.${className}` : ROOT_SELECTOR;
   isCustomSelector && document.querySelector(selector).classList.add(className);
   document.querySelector(fullSelector).style.setProperty('--scrollbar-width', `${width ?? 0}px`);
   console.log('loadScrollbarPreferences', url)
